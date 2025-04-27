@@ -1,18 +1,79 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../CSS/Style-Reconhecimento-Facial.css">
-    <link rel="icon" href="../Images/image-removebg-preview (1).png" type="image/x-icon">
-    <title>Face ID</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Site para reconhecimento facial">
+  <title>Face ID</title>
 </head>
 <body>
-    <header>
-            <a href="../HTML/Site-Reconhecimento-Facil.html"><img id="imagem-inicio" src="../Images/4d5fe922-5057-46bf-9d0e-b2d39950648b.jpeg"></a>
-            <a href="../HTML/Registro-pessoa.html" id="registrorosto">Registro de Rosto</a>
-            <a href="../HTML/login.html" id="loginpagina">login</a>
-            <a href="../HTML/Criar-conta.html" id="singuppagina">Sing up</a>
-    </header>
+
+  <!-- Cabeçalho -->
+  <header>
+    <h1>Face ID - Reconhecimento facil</h1>
+    <nav>
+      <a href="#login">Login</a>
+      <a href="#signup">Sign Up</a>
+    </nav>
+  </header>
+
+  <!-- Página inicial -->
+  <main>
+    <section id="home">
+      <h2>Bem-vindo</h2>
+      <p>Cadastre-se, envie sua foto e veja o reconhecimento acontecer.</p>
+    </section>
+
+    <!-- Formulário de Login -->
+    <section id="login">
+      <h2>Login</h2>
+      <form>
+        <label for="email-login">Email:</label>
+        <input type="text" id="email-login" name="email" required>
+
+        <label for="senha-login">Senha:</label>
+        <input type="password" id="senha-login" name="senha" required>
+
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <!-- Formulário de Cadastro -->
+    <section id="signup">
+      <h2>Sign Up</h2>
+      <form>
+        <label for="nome-signup">Nome Completo:</label>
+        <input type="text" id="nome-signup" name="nome" required>
+
+        <label for="email-signup">Email:</label>
+        <input type="text" id="email-signup" name="email" required>
+
+        <label for="senha-signup">Senha:</label>
+        <input type="password" id="senha-signup" name="senha" required>
+
+        <button type="submit">Cadastrar</button>
+      </form>
+    </section>
+
+    <!-- Upload de Imagem -->
+    <section id="upload">
+      <h2>Enviar Imagem</h2>
+      <form>
+        <label for="foto">Escolha uma imagem:</label>
+        <input type="file" id="foto" name="foto" accept="image/*" required>
+
+        <button type="submit">Analisar</button>
+      </form>
+    </section>
+
+    <!-- Resultado -->
+    <section id="result">
+      <h2>Resultado</h2>
+      <p>O rosto foi reconhecido com sucesso!</p>
+      <p>(Detalhes como idade, emoções, etc apareceriam aqui.)</p>
+    </section>
+
+  </main>
+
 </body>
 </html>
