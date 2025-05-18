@@ -1,0 +1,43 @@
+*{
+    margin: 0;
+}
+body {
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
+    background-color: white;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+#corpo_secao_portifolio {
+    border: 1px solid rgba(49, 101, 244, 0.834);
+    align-items: center;
+}
+#lista_links_pessoais{
+    justify-content: center;
+    gap: 40px;
+    list-style: none;
+    display: flex;
+
+}
+#imagem_guilherme>img {
+    width: 90px;
+    height: 90px;
+    display: block; 
+    margin: auto;
+ 
+    
+}
+#imagem_instagram {
+ 
+    height: 64px;
+    width: 64px;
+
+}
+
+h2 {
+    text-indent: 20px;
+    text-align:center ;
+}
+h3 {
+    text-align: center;
+}
