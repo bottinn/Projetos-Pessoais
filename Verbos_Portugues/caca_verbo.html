@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="caca_verbo.css">
+    <title>Jogo Caça Verbo</title>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Caça Verbo</h1>
+        <p>Encontre os verbos escondidos na grade. Eles podem estar na horizontal, vertical ou diagonal.</p>
+        
+        <div class="message" id="message"></div>
+        
+        <div class="grid" id="grid"></div>
+        
+        <div class="word-list" id="wordList">
+            <div class="word-item" data-word="AMAR">AMAR</div>
+            <div class="word-item" data-word="CORRER">CORRER</div>
+            <div class="word-item" data-word="DANCAR">DANÇAR</div>
+            <div class="word-item" data-word="ESTUDAR">ESTUDAR</div>
+            <div class="word-item" data-word="FALAR">FALAR</div>
+            <div class="word-item" data-word="LER">LER</div>
+            <div class="word-item" data-word="PARTIR">PARTIR</div>
+            <div class="word-item" data-word="SENTIR">SENTIR</div>
+        </div>
+        
+        <div style="display: flex; justify-content: center; gap: 10px;">
+            <button id="resetBtn">Reiniciar Jogo</button>
+            <a href="base.html" class="button-link">Voltar ao Início</a>
+        </div>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          
+     
+            const gridData = [
+                ['A', 'N', 'A', 'P', 'X', 'P', 'Q', 'R', 'E', 'L'],
+                ['M', 'R', 'O', 'A', 'G', 'R', 'Ê', 'M', 'I', 'O'],
+                ['A', 'A', 'A', 'R', 'Ç', 'A', 'R', 'I', 'O', 'P'],
+                ['R', 'Ç', 'S', 'T', 'U', 'D', 'R', 'R', 'L', 'K'],
+                ['E', 'N', 'A', 'I', 'A', 'I', 'J', 'H', 'G', 'F'],
+                ['F', 'A', 'H', 'R', 'T', 'F', 'A', 'L', 'A', 'R'],
+                ['G', 'D', 'P', 'N', 'R', 'T', 'I', 'R', 'A', 'D'],
+                ['H', 'J', 'E', 'N', 'E', 'Y', 'M', 'A', 'R', 'N'],
+                ['I', 'S', 'E', 'S', 'T', 'U', 'D', 'A', 'R', 'W'],
+                ['J', 'K', 'L', 'R', 'E', 'R', 'R', 'O', 'C', 'R']
+            ];
+            
+            const wordList = ['AMAR', 'CORRER', 'DANCAR', 'ESTUDAR', 'FALAR', 'LER', 'PARTIR', 'SENTIR'];
+            let selectedCells = [];
+            let foundWords = [];
+            let currentSelection = [];
+            
+            const gridElement = document.getElementById('grid');
+            const wordListElement = document.getElementById('wordList');
+            const resetBtn = document.getElementById('resetBtn');
+            const messageElement = document.getElementById('message');
+       
+            function createGrid() {
+                gridElement.innerHTML = '';
+                
+                for (let row = 0; row < gridData.length; row++) {
+                    for (let col = 0; col < gridData[row].length; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        cell.textContent = gridData[row][col];
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+                        
+                        cell.addEventListener('click', () => handleCellClick(cell, row, col));
+                        
+                        gridElement.appendChild(cell);
+                    }
+                }
+            }
+            
+     
+            function handleCellClick(cell, row, col) {
+            
+                if (cell.classList.contains('found')) return;
+     
+                if (currentSelection.length > 0) {
+                    const lastCell = currentSelection[currentSelection.length - 1];
+                    const lastRow = parseInt(lastCell.dataset.row);
+                    const lastCol = parseInt(lastCell.dataset.col);
+                    
+                    if (Math.abs(row - lastRow) > 1 || Math.abs(col - lastCol) > 1) {
+                        clearSelection();
+                    }
+                }
+                
+               
+                if (cell.classList.contains('selected')) {
+                    cell.classList.remove('selected');
+                    currentSelection = currentSelection.filter(c => c !== cell);
+                } else {
+                    cell.classList.add('selected');
+                    currentSelection.push(cell);
+                }
+                
+             
+                if (currentSelection.length > 1) {
+                    checkForWord();
+                }
+            }
+            
+        
+            function checkForWord() {
+                const selectedWord = currentSelection.map(cell => cell.textContent).join('');
+                
+         
+                const normalizedWord = selectedWord.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+                
+                for (const word of wordList) {
+                    const normalizedListWord = word.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+                    
+                    if (normalizedWord === normalizedListWord || 
+                        normalizedWord.split('').reverse().join('') === normalizedListWord) {
+                        
+                  
+                        currentSelection.forEach(cell => {
+                            cell.classList.remove('selected');
+                            cell.classList.add('found');
+                        });
+                        
+                        
+                        if (!foundWords.includes(word)) {
+                            foundWords.push(word);
+                            
+                          
+                            document.querySelectorAll('.word-item').forEach(item => {
+                                if (item.dataset.word === word) {
+                                    item.classList.add('found');
+                                }
+                            });
+                            
+                            messageElement.textContent = `Parabéns! Você encontrou o verbo "${word}"!`;
+                            setTimeout(() => messageElement.textContent = '', 2000);
+                        }
+                        
+                      
+                        if (foundWords.length === wordList.length) {
+                            messageElement.textContent = 'Parabéns! Você encontrou todos os verbos!';
+                        }
+                        
+                        currentSelection = [];
+                        return;
+                    }
+                }
+            }
+        
+            function clearSelection() {
+                currentSelection.forEach(cell => {
+                    cell.classList.remove('selected');
+                });
+                currentSelection = [];
+            }
+            
+           
+            function resetGame() {
+                foundWords = [];
+                currentSelection = [];
+                messageElement.textContent = '';
+                
+                document.querySelectorAll('.cell').forEach(cell => {
+                    cell.classList.remove('selected', 'found');
+                });
+                
+                document.querySelectorAll('.word-item').forEach(item => {
+                    item.classList.remove('found');
+                });
+            }
+            
+            
+            resetBtn.addEventListener('click', resetGame);
+            
+          
+            createGrid();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Transformação Verbal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            text-align: center;
+            padding: 30px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .explanation {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .prompt {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .message {
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 24px;
+        }
+        .status {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        #restartBtn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Jogo da Transformação Verbal</h1>
+        <div class="explanation">
+            Transforme corretamente os verbos de acordo com a instrução apresentada.<br>
+            Cada acerto vale 1 ponto. Você tem 3 vidas — cada erro custa uma vida. Boa sorte!
+        </div>
+        <div class="prompt" id="prompt"></div>
+        <input type="text" id="answerInput" placeholder="Digite aqui sua resposta...">
+        <br>
+        <button id="submitBtn" onclick="checkAnswer()">Enviar</button>
+        <button id="restartBtn" onclick="restartGame()">Recomeçar</button>
+        <div class="message" id="message"></div>
+        <div class="status">
+            Pontuação: <span id="score">0</span> | Vidas: <span id="lives">3</span>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { verb: "cantar", instruction: "Pretérito perfeito, 1ª pessoa do singular", answer: "cantei" },
+            { verb: "comer", instruction: "Futuro do presente, 3ª pessoa do plural", answer: "comerão" },
+            { verb: "partir", instruction: "Presente, 2ª pessoa do singular", answer: "partes" },
+            { verb: "falar", instruction: "Pretérito imperfeito, 1ª pessoa do plural", answer: "falávamos" },
+            { verb: "estudar", instruction: "Presente, 1ª pessoa do singular", answer: "estudo" },
+            { verb: "viver", instruction: "Futuro do pretérito, 2ª pessoa do singular", answer: "viverias" }
+        ];
+
+        let current = 0;
+        let score = 0;
+        let lives = 3;
+
+        const promptElement = document.getElementById('prompt');
+        const answerInput = document.getElementById('answerInput');
+        const messageElement = document.getElementById('message');
+        const scoreElement = document.getElementById('score');
+        const livesElement = document.getElementById('lives');
+        const restartBtn = document.getElementById('restartBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function loadQuestion() {
+            if (current < questions.length && lives > 0) {
+                const q = questions[current];
+                promptElement.textContent = `Verbo: ${q.verb} | Instrução: ${q.instruction}`;
+                answerInput.value = '';
+                answerInput.disabled = false;
+                submitBtn.style.display = 'inline-block';
+                messageElement.textContent = '';
+            } else {
+                endGame();
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            const correctAnswer = questions[current].answer.toLowerCase();
+
+            if (userAnswer === correctAnswer) {
+                score++;
+                messageElement.textContent = '✅ Correto!';
+                messageElement.style.color = 'green';
+            } else {
+                lives--;
+                messageElement.textContent = `❌ Errado! Resposta correta: ${correctAnswer}`;
+                messageElement.style.color = 'red';
+            }
+
+            scoreElement.textContent = score;
+            livesElement.textContent = lives;
+            current++;
+
+            setTimeout(loadQuestion, 1500);
+        }
+
+        function endGame() {
+            promptElement.textContent = 'Fim de jogo!';
+            answerInput.disabled = true;
+            messageElement.textContent = `Sua pontuação final foi ${score}.`;
+            submitBtn.style.display = 'none';
+            restartBtn.style.display = 'inline-block';
+        }
+
+        function restartGame() {
+            current = 0;
+            score = 0;
+            lives = 3;
+            scoreElement.textContent = score;
+            livesElement.textContent = lives;
+            restartBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-block';
+            answerInput.disabled = false;
+            loadQuestion();
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>

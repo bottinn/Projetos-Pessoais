@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="multipla_escolha.css">
+  <title>Jogo de Verbos - Múltipla Escolha</title>
+
+</head>
+<body>
+  <div class="container">
+    <h1>Jogo de Verbos  Escolha Certa</h1>
+    <div class="question" id="sentence">Carregando pergunta...</div>
+    <div class="options" id="options"></div>
+    <div class="message" id="message"></div>
+    <div class="status">
+      Pontuação: <span id="score">0</span><br>
+      Erros Seguidos: <span id="errors">0</span>
+    </div>
+  </div>
+
+  <script>
+    const perguntas = [
+      { sentence: "Qual é o pretérito perfeito de 'comer' (1ª pessoa)?", options: ["comi", "comia", "comeria"], answer: "comi" },
+      { sentence: "Futuro do presente de 'falar' (3ª pessoa do plural)?", options: ["falariam", "falarão", "falem"], answer: "falarão" },
+      { sentence: "Presente de 'estudar' (2ª pessoa do singular)?", options: ["estudas", "estudava", "estudaste"], answer: "estudas" },
+      { sentence: "Pretérito imperfeito de 'ver' (1ª pessoa do plural)?", options: ["víamos", "vimos", "veremos"], answer: "víamos" },
+      { sentence: "Futuro do pretérito de 'partir' (2ª pessoa)?", options: ["partiste", "partirias", "partirão"], answer: "partirias" },
+      { sentence: "Presente do indicativo de 'viver' (1ª pessoa)?", options: ["vivo", "vivi", "viverei"], answer: "vivo" },
+      { sentence: "Pretérito perfeito de 'andar' (2ª pessoa)?", options: ["andaste", "andavas", "andarias"], answer: "andaste" },
+      { sentence: "Futuro do presente de 'dizer' (1ª pessoa)?", options: ["direi", "diria", "disse"], answer: "direi" }
+    ];
+
+    let shuffled = [...perguntas].sort(() => Math.random() - 0.5);
+    let current = 0;
+    let score = 0;
+    let errors = 0;
+
+    const sentenceEl = document.getElementById("sentence");
+    const optionsEl = document.getElementById("options");
+    const messageEl = document.getElementById("message");
+    const scoreEl = document.getElementById("score");
+    const errorsEl = document.getElementById("errors");
+
+    function loadQuestion() {
+      if (current >= shuffled.length) {
+        endGame();
+        return;
+      }
+      const q = shuffled[current];
+      sentenceEl.textContent = q.sentence;
+      optionsEl.innerHTML = "";
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(opt, q.answer);
+        optionsEl.appendChild(btn);
+      });
+      messageEl.textContent = "";
+    }
+
+    function checkAnswer(selected, correct) {
+      if (selected === correct) {
+        messageEl.textContent = "✅ Correto!";
+        messageEl.style.color = "green";
+        score += 100;
+        errors = 0;
+      } else {
+        messageEl.textContent = `❌ Errado! A resposta correta era "${correct}".`;
+        messageEl.style.color = "red";
+        errors++;
+        if (errors > 1) {
+          score = Math.max(0, score - 100);
+        }
+      }
+      scoreEl.textContent = score;
+      errorsEl.textContent = errors;
+      current++;
+      setTimeout(loadQuestion, 1500);
+    }
+
+    function endGame() {
+      sentenceEl.textContent = "🎉 Fim do jogo!";
+      optionsEl.innerHTML = "";
+      let level = "";
+      if (score >= 700) level = "🏆 Excelente!";
+      else if (score >= 400) level = "👍 Muito bom!";
+      else if (score >= 200) level = "🙂 Pode melhorar.";
+      else level = "😕 Continue praticando.";
+
+      messageEl.innerHTML = `
+        Pontuação final: <strong>${score}</strong><br>
+        Classificação: <strong>${level}</strong>
+      `;
+      const btn = document.createElement("button");
+      btn.textContent = "🔁 Jogar Novamente";
+      btn.onclick = () => location.reload();
+      optionsEl.appendChild(btn);
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
